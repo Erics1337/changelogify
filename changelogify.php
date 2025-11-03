@@ -4,8 +4,8 @@
  * Plugin URI: https://github.com/yourusername/changelogify
  * Description: Automatic changelog generator from Simple History, WP Activity Log, or native WordPress events. Creates versioned changelog releases with customizable sections.
  * Version: 1.0.0
- * Author: Your Name
- * Author URI: https://yourwebsite.com
+ * Author: Eric Swanson
+ * Author URI: https://ericsdevportfolio.com
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: changelogify
@@ -77,9 +77,6 @@ class Changelogify_Plugin {
      * Initialize plugin components
      */
     public function init() {
-        // Load text domain
-        load_plugin_textdomain('changelogify', false, dirname(plugin_basename(__FILE__)) . '/languages');
-
         // Initialize components
         Changelogify_CPT_Changelog_Release::get_instance();
         Changelogify_Event_Sources::get_instance();

@@ -145,19 +145,19 @@ class Changelogify_Settings {
      * Section callbacks
      */
     public function event_changelogify_section_callback() {
-        echo '<p>' . __('Select which event sources to use for generating changelogs.', 'changelogify') . '</p>';
+        echo '<p>' . esc_html__('Select which event sources to use for generating changelogs.', 'changelogify') . '</p>';
     }
 
     public function event_mapping_section_callback() {
-        echo '<p>' . __('Map specific events to changelog sections (Added, Changed, Fixed, Removed, Security).', 'changelogify') . '</p>';
+        echo '<p>' . esc_html__('Map specific events to changelog sections (Added, Changed, Fixed, Removed, Security).', 'changelogify') . '</p>';
     }
 
     public function date_range_section_callback() {
-        echo '<p>' . __('Configure the default date range for generating releases.', 'changelogify') . '</p>';
+        echo '<p>' . esc_html__('Configure the default date range for generating releases.', 'changelogify') . '</p>';
     }
 
     public function cron_section_callback() {
-        echo '<p>' . __('Configure automatic changelog generation using WP-Cron.', 'changelogify') . '</p>';
+        echo '<p>' . esc_html__('Configure automatic changelog generation using WP-Cron.', 'changelogify') . '</p>';
     }
 
     /**
@@ -184,12 +184,12 @@ class Changelogify_Settings {
         ];
 
         foreach ($sources as $key => $source) {
-            $checked = in_array($key, $enabled) ? 'checked' : '';
-            $disabled = !$source['active'] ? 'disabled' : '';
-            $status = !$source['active'] ? ' <em>(' . __('Not installed', 'changelogify') . ')</em>' : '';
+            $is_checked = in_array($key, $enabled, true);
+            $is_disabled = !$source['active'];
+            $status = !$source['active'] ? ' <em>(' . esc_html__('Not installed', 'changelogify') . ')</em>' : '';
 
             echo '<label>';
-            echo '<input type="checkbox" name="changelogify_settings[enabled_sources][]" value="' . esc_attr($key) . '" ' . $checked . ' ' . $disabled . '>';
+            echo '<input type="checkbox" name="changelogify_settings[enabled_sources][]" value="' . esc_attr($key) . '" ' . checked($is_checked, true, false) . ' ' . disabled($is_disabled, true, false) . '>';
             echo ' ' . esc_html($source['label']) . $status;
             echo '</label><br>';
         }
@@ -211,7 +211,7 @@ class Changelogify_Settings {
 
         echo '</div>';
 
-        echo '<button type="button" class="button" onclick="addMappingRow()">Add Mapping</button>';
+        echo '<button type="button" class="button" onclick="addMappingRow()">' . esc_html__('Add Mapping', 'changelogify') . '</button>';
 
         ?>
         <script>
@@ -223,11 +223,11 @@ class Changelogify_Settings {
                 <input type="text" name="changelogify_settings[event_mapping_keys][]" placeholder="Event action" class="regular-text">
                 →
                 <select name="changelogify_settings[event_mapping_values][]">
-                    <option value="added"><?php _e('Added', 'changelogify'); ?></option>
-                    <option value="changed"><?php _e('Changed', 'changelogify'); ?></option>
-                    <option value="fixed"><?php _e('Fixed', 'changelogify'); ?></option>
-                    <option value="removed"><?php _e('Removed', 'changelogify'); ?></option>
-                    <option value="security"><?php _e('Security', 'changelogify'); ?></option>
+                    <option value="added"><?php esc_html_e('Added', 'changelogify'); ?></option>
+                    <option value="changed"><?php esc_html_e('Changed', 'changelogify'); ?></option>
+                    <option value="fixed"><?php esc_html_e('Fixed', 'changelogify'); ?></option>
+                    <option value="removed"><?php esc_html_e('Removed', 'changelogify'); ?></option>
+                    <option value="security"><?php esc_html_e('Security', 'changelogify'); ?></option>
                 </select>
                 <button type="button" class="button" onclick="this.parentElement.remove()">Remove</button>
             `;
@@ -246,11 +246,11 @@ class Changelogify_Settings {
                    class="regular-text">
             →
             <select name="changelogify_settings[event_mapping_values][]">
-                <option value="added" <?php selected($section, 'added'); ?>><?php _e('Added', 'changelogify'); ?></option>
-                <option value="changed" <?php selected($section, 'changed'); ?>><?php _e('Changed', 'changelogify'); ?></option>
-                <option value="fixed" <?php selected($section, 'fixed'); ?>><?php _e('Fixed', 'changelogify'); ?></option>
-                <option value="removed" <?php selected($section, 'removed'); ?>><?php _e('Removed', 'changelogify'); ?></option>
-                <option value="security" <?php selected($section, 'security'); ?>><?php _e('Security', 'changelogify'); ?></option>
+                <option value="added" <?php selected($section, 'added'); ?>><?php esc_html_e('Added', 'changelogify'); ?></option>
+                <option value="changed" <?php selected($section, 'changed'); ?>><?php esc_html_e('Changed', 'changelogify'); ?></option>
+                <option value="fixed" <?php selected($section, 'fixed'); ?>><?php esc_html_e('Fixed', 'changelogify'); ?></option>
+                <option value="removed" <?php selected($section, 'removed'); ?>><?php esc_html_e('Removed', 'changelogify'); ?></option>
+                <option value="security" <?php selected($section, 'security'); ?>><?php esc_html_e('Security', 'changelogify'); ?></option>
             </select>
             <button type="button" class="button" onclick="this.parentElement.remove()">Remove</button>
         </div>
@@ -264,13 +264,13 @@ class Changelogify_Settings {
         ?>
         <select name="changelogify_settings[date_range_type]">
             <option value="since_last_release" <?php selected($type, 'since_last_release'); ?>>
-                <?php _e('Since last release', 'changelogify'); ?>
+                <?php esc_html_e('Since last release', 'changelogify'); ?>
             </option>
             <option value="last_7_days" <?php selected($type, 'last_7_days'); ?>>
-                <?php _e('Last 7 days', 'changelogify'); ?>
+                <?php esc_html_e('Last 7 days', 'changelogify'); ?>
             </option>
             <option value="last_30_days" <?php selected($type, 'last_30_days'); ?>>
-                <?php _e('Last 30 days', 'changelogify'); ?>
+                <?php esc_html_e('Last 30 days', 'changelogify'); ?>
             </option>
         </select>
         <?php
@@ -283,7 +283,7 @@ class Changelogify_Settings {
         ?>
         <label>
             <input type="checkbox" name="changelogify_settings[cron_enabled]" value="1" <?php checked($enabled, 1); ?>>
-            <?php _e('Enable automatic changelog generation', 'changelogify'); ?>
+            <?php esc_html_e('Enable automatic changelog generation', 'changelogify'); ?>
         </label>
         <?php
     }
@@ -294,8 +294,8 @@ class Changelogify_Settings {
 
         ?>
         <select name="changelogify_settings[cron_frequency]">
-            <option value="daily" <?php selected($frequency, 'daily'); ?>><?php _e('Daily', 'changelogify'); ?></option>
-            <option value="weekly" <?php selected($frequency, 'weekly'); ?>><?php _e('Weekly', 'changelogify'); ?></option>
+            <option value="daily" <?php selected($frequency, 'daily'); ?>><?php esc_html_e('Daily', 'changelogify'); ?></option>
+            <option value="weekly" <?php selected($frequency, 'weekly'); ?>><?php esc_html_e('Weekly', 'changelogify'); ?></option>
         </select>
         <?php
     }

@@ -56,7 +56,8 @@ class Changelogify_Public_Display {
             'changelogify-block',
             CHANGELOGIFY_PLUGIN_URL . 'assets/js/block.js',
             ['wp-blocks', 'wp-element', 'wp-components', 'wp-block-editor'],
-            CHANGELOGIFY_VERSION
+            CHANGELOGIFY_VERSION,
+            true
         );
 
         // Register block
@@ -156,7 +157,7 @@ class Changelogify_Public_Display {
 
             echo '</div>';
         } else {
-            echo '<p class="sources-no-releases">' . __('No changelog releases found.', 'changelogify') . '</p>';
+            echo '<p class="sources-no-releases">' . esc_html__('No changelog releases found.', 'changelogify') . '</p>';
         }
 
         wp_reset_postdata();
@@ -199,7 +200,7 @@ class Changelogify_Public_Display {
 
             <footer class="sources-release-footer">
                 <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="sources-view-release">
-                    <?php _e('View full release', 'changelogify'); ?>
+                    <?php esc_html_e('View full release', 'changelogify'); ?>
                 </a>
             </footer>
         </article>
@@ -234,7 +235,7 @@ class Changelogify_Public_Display {
                 echo '<div class="sources-section sources-section-' . esc_attr($key) . '">';
                 echo '<h3 class="sources-section-title">';
                 if ($icon) {
-                    echo '<span class="sources-section-icon">' . $icon . '</span> ';
+                    echo '<span class="sources-section-icon">' . esc_html($icon) . '</span> ';
                 }
                 echo esc_html($label);
                 echo '</h3>';

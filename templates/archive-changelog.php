@@ -8,7 +8,7 @@ get_header();
 
 <div class="sources-archive-wrapper">
     <header class="page-header">
-        <h1 class="page-title"><?php _e('Changelog', 'changelogify'); ?></h1>
+        <h1 class="page-title"><?php esc_html_e('Changelog', 'changelogify'); ?></h1>
     </header>
 
     <div class="sources-archive-content">
@@ -27,7 +27,7 @@ get_header();
                         <?php if ($version) : ?>
                             <h2 class="sources-version">
                                 <a href="<?php the_permalink(); ?>">
-                                    Version <?php echo esc_html($version); ?>
+                                    <?php echo esc_html(sprintf(__('Version %s', 'changelogify'), $version)); ?>
                                 </a>
                             </h2>
                         <?php endif; ?>
@@ -54,7 +54,7 @@ get_header();
 
                     <footer class="sources-release-footer">
                         <a href="<?php the_permalink(); ?>" class="sources-view-release">
-                            <?php _e('View full release', 'changelogify'); ?>
+                            <?php esc_html_e('View full release', 'changelogify'); ?>
                         </a>
                     </footer>
                 </article>
@@ -66,7 +66,7 @@ get_header();
 
             the_posts_pagination();
         } else {
-            echo '<p class="sources-no-releases">' . __('No changelog releases found.', 'changelogify') . '</p>';
+            echo '<p class="sources-no-releases">' . esc_html__('No changelog releases found.', 'changelogify') . '</p>';
         }
         ?>
     </div>
@@ -74,3 +74,4 @@ get_header();
 
 <?php
 get_footer();
+?>

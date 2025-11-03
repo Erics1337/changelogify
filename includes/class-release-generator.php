@@ -50,22 +50,22 @@ class Changelogify_Release_Generator {
      */
     public function render_generate_page() {
         if (!current_user_can('manage_options')) {
-            wp_die(__('You do not have sufficient permissions to access this page.', 'changelogify'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'changelogify'));
         }
 
         $last_release = $this->get_last_release();
 
         ?>
         <div class="wrap">
-            <h1><?php _e('Generate Changelog Release', 'changelogify'); ?></h1>
+            <h1><?php esc_html_e('Generate Changelog Release', 'changelogify'); ?></h1>
 
-            <?php if (isset($_GET['generated']) && $_GET['generated'] === 'success') : ?>
+            <?php if (isset($_GET['generated']) && sanitize_text_field(wp_unslash($_GET['generated'])) === 'success') : ?>
                 <div class="notice notice-success is-dismissible">
                     <p>
-                        <?php _e('Release generated successfully!', 'changelogify'); ?>
+                        <?php esc_html_e('Release generated successfully!', 'changelogify'); ?>
                         <?php if (isset($_GET['post_id'])) : ?>
-                            <a href="<?php echo esc_url(get_edit_post_link($_GET['post_id'])); ?>">
-                                <?php _e('View Release', 'changelogify'); ?>
+                            <a href="<?php echo esc_url(get_edit_post_link(absint($_GET['post_id']))); ?>">
+                                <?php esc_html_e('View Release', 'changelogify'); ?>
                             </a>
                         <?php endif; ?>
                     </p>
@@ -73,36 +73,36 @@ class Changelogify_Release_Generator {
             <?php endif; ?>
 
             <div class="card">
-                <form method="post" action="<?php echo admin_url('admin-post.php'); ?>">
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <?php wp_nonce_field('changelogify_generate_release', 'changelogify_generate_nonce'); ?>
                     <input type="hidden" name="action" value="changelogify_generate_release">
 
                     <table class="form-table">
                         <tr>
                             <th scope="row">
-                                <label for="version"><?php _e('Version', 'changelogify'); ?></label>
+                                <label for="version"><?php esc_html_e('Version', 'changelogify'); ?></label>
                             </th>
                             <td>
                                 <input type="text" id="version" name="version"
                                        value="<?php echo esc_attr($this->suggest_next_version($last_release)); ?>"
                                        class="regular-text" required>
                                 <p class="description">
-                                    <?php _e('Release version number (e.g., 1.0.0)', 'changelogify'); ?>
+                                    <?php esc_html_e('Release version number (e.g., 1.0.0)', 'changelogify'); ?>
                                 </p>
                             </td>
                         </tr>
 
                         <tr>
                             <th scope="row">
-                                <label for="date_range_type"><?php _e('Date Range', 'changelogify'); ?></label>
+                                <label for="date_range_type"><?php esc_html_e('Date Range', 'changelogify'); ?></label>
                             </th>
                             <td>
                                 <select id="date_range_type" name="date_range_type">
                                     <option value="since_last_release">
-                                        <?php _e('Since last release', 'changelogify'); ?>
+                                        <?php esc_html_e('Since last release', 'changelogify'); ?>
                                     </option>
                                     <option value="custom">
-                                        <?php _e('Custom date range', 'changelogify'); ?>
+                                        <?php esc_html_e('Custom date range', 'changelogify'); ?>
                                     </option>
                                 </select>
                             </td>
@@ -110,29 +110,29 @@ class Changelogify_Release_Generator {
 
                         <tr id="custom_date_range" style="display:none;">
                             <th scope="row">
-                                <label><?php _e('Custom Dates', 'changelogify'); ?></label>
+                                <label><?php esc_html_e('Custom Dates', 'changelogify'); ?></label>
                             </th>
                             <td>
-                                <label for="date_from"><?php _e('From:', 'changelogify'); ?></label>
+                                <label for="date_from"><?php esc_html_e('From:', 'changelogify'); ?></label>
                                 <input type="date" id="date_from" name="date_from"
-                                       value="<?php echo esc_attr(date('Y-m-d', strtotime('-7 days'))); ?>">
+                                       value="<?php echo esc_attr(gmdate('Y-m-d', time() - WEEK_IN_SECONDS)); ?>">
                                 <br><br>
-                                <label for="date_to"><?php _e('To:', 'changelogify'); ?></label>
+                                <label for="date_to"><?php esc_html_e('To:', 'changelogify'); ?></label>
                                 <input type="date" id="date_to" name="date_to"
-                                       value="<?php echo esc_attr(date('Y-m-d')); ?>">
+                                       value="<?php echo esc_attr(gmdate('Y-m-d')); ?>">
                             </td>
                         </tr>
 
                         <?php if ($last_release) : ?>
                         <tr>
-                            <th scope="row"><?php _e('Last Release', 'changelogify'); ?></th>
+                            <th scope="row"><?php esc_html_e('Last Release', 'changelogify'); ?></th>
                             <td>
                                 <strong><?php echo esc_html(get_post_meta($last_release->ID, '_changelogify_version', true)); ?></strong>
                                 -
                                 <?php echo esc_html(get_the_date('', $last_release)); ?>
                                 <br>
                                 <a href="<?php echo esc_url(get_edit_post_link($last_release->ID)); ?>">
-                                    <?php _e('View last release', 'changelogify'); ?>
+                                    <?php esc_html_e('View last release', 'changelogify'); ?>
                                 </a>
                             </td>
                         </tr>
@@ -162,18 +162,18 @@ class Changelogify_Release_Generator {
      */
     public function handle_generate_release() {
         if (!current_user_can('manage_options')) {
-            wp_die(__('You do not have sufficient permissions to access this page.', 'changelogify'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'changelogify'));
         }
 
         check_admin_referer('changelogify_generate_release', 'changelogify_generate_nonce');
 
-        $version = isset($_POST['version']) ? sanitize_text_field($_POST['version']) : '';
-        $date_range_type = isset($_POST['date_range_type']) ? sanitize_text_field($_POST['date_range_type']) : 'since_last_release';
+        $version = isset($_POST['version']) ? sanitize_text_field(wp_unslash($_POST['version'])) : '';
+        $date_range_type = isset($_POST['date_range_type']) ? sanitize_text_field(wp_unslash($_POST['date_range_type'])) : 'since_last_release';
 
         // Determine date range
         if ($date_range_type === 'custom') {
-            $date_from = isset($_POST['date_from']) ? sanitize_text_field($_POST['date_from']) : date('Y-m-d', strtotime('-7 days'));
-            $date_to = isset($_POST['date_to']) ? sanitize_text_field($_POST['date_to']) : date('Y-m-d');
+            $date_from = isset($_POST['date_from']) ? sanitize_text_field(wp_unslash($_POST['date_from'])) : gmdate('Y-m-d', time() - WEEK_IN_SECONDS);
+            $date_to = isset($_POST['date_to']) ? sanitize_text_field(wp_unslash($_POST['date_to'])) : gmdate('Y-m-d');
         } else {
             $last_release = $this->get_last_release();
             if ($last_release) {
@@ -182,9 +182,9 @@ class Changelogify_Release_Generator {
                     $date_from = get_the_date('Y-m-d', $last_release);
                 }
             } else {
-                $date_from = date('Y-m-d', strtotime('-30 days'));
+                $date_from = gmdate('Y-m-d', time() - 30 * DAY_IN_SECONDS);
             }
-            $date_to = date('Y-m-d');
+            $date_to = gmdate('Y-m-d');
         }
 
         // Generate release
@@ -222,8 +222,9 @@ class Changelogify_Release_Generator {
         $sections = $this->categorize_events($events);
 
         // Create post
+        /* translators: 1: release version number */
         $post_id = wp_insert_post([
-            'post_title' => sprintf(__('Release %s', 'changelogify'), $version),
+            'post_title' => sprintf(__('Release %1$s', 'changelogify'), $version),
             'post_status' => 'draft',
             'post_type' => 'changelog_release',
             'post_content' => $this->generate_release_content($sections)
@@ -386,7 +387,7 @@ class Changelogify_Release_Generator {
     public function cron_generate_release() {
         $last_release = $this->get_last_release();
 
-        $date_from = date('Y-m-d', strtotime('-7 days'));
+        $date_from = gmdate('Y-m-d', time() - WEEK_IN_SECONDS);
         if ($last_release) {
             $last_date = get_post_meta($last_release->ID, '_changelogify_date_to', true);
             if ($last_date) {
@@ -394,7 +395,7 @@ class Changelogify_Release_Generator {
             }
         }
 
-        $date_to = date('Y-m-d');
+        $date_to = gmdate('Y-m-d');
 
         $version = $this->suggest_next_version($last_release);
 

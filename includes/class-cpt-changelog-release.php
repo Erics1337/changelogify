@@ -108,23 +108,23 @@ class Changelogify_CPT_Changelog_Release {
         ?>
         <table class="form-table">
             <tr>
-                <th><label for="changelogify_version"><?php _e('Version', 'changelogify'); ?></label></th>
+                <th><label for="changelogify_version"><?php esc_html_e('Version', 'changelogify'); ?></label></th>
                 <td>
                     <input type="text" id="changelogify_version" name="changelogify_version"
                            value="<?php echo esc_attr($version); ?>"
                            class="regular-text" placeholder="1.0.0">
-                    <p class="description"><?php _e('Release version number (e.g., 1.0.0)', 'changelogify'); ?></p>
+                    <p class="description"><?php esc_html_e('Release version number (e.g., 1.0.0)', 'changelogify'); ?></p>
                 </td>
             </tr>
             <tr>
-                <th><label for="changelogify_date_from"><?php _e('Date Range From', 'changelogify'); ?></label></th>
+                <th><label for="changelogify_date_from"><?php esc_html_e('Date Range From', 'changelogify'); ?></label></th>
                 <td>
                     <input type="date" id="changelogify_date_from" name="changelogify_date_from"
                            value="<?php echo esc_attr($date_from); ?>">
                 </td>
             </tr>
             <tr>
-                <th><label for="changelogify_date_to"><?php _e('Date Range To', 'changelogify'); ?></label></th>
+                <th><label for="changelogify_date_to"><?php esc_html_e('Date Range To', 'changelogify'); ?></label></th>
                 <td>
                     <input type="date" id="changelogify_date_to" name="changelogify_date_to"
                            value="<?php echo esc_attr($date_to); ?>">
@@ -169,7 +169,9 @@ class Changelogify_CPT_Changelog_Release {
                 <textarea name="changelogify_sections[<?php echo esc_attr($key); ?>]"
                           rows="5"
                           class="large-text"
-                          placeholder="<?php echo esc_attr(sprintf(__('Enter %s items (one per line)', 'changelogify'), strtolower($label))); ?>"><?php
+                          placeholder="<?php
+                          /* translators: 1: section label (lowercase) */
+                          echo esc_attr(sprintf(__('Enter %1$s items (one per line)', 'changelogify'), strtolower($label))); ?>"><?php
                     if (is_array($items)) {
                         echo esc_textarea(implode("\n", $items));
                     }
@@ -177,7 +179,7 @@ class Changelogify_CPT_Changelog_Release {
             </div>
             <?php endforeach; ?>
             <p class="description">
-                <?php _e('Enter changelog items one per line. These will be automatically populated when generating a release.', 'changelogify'); ?>
+                <?php esc_html_e('Enter changelog items one per line. These will be automatically populated when generating a release.', 'changelogify'); ?>
             </p>
         </div>
         <?php
@@ -189,12 +191,12 @@ class Changelogify_CPT_Changelog_Release {
     public function save_meta_boxes($post_id, $post) {
         // Check nonces
         if (!isset($_POST['changelogify_release_details_nonce']) ||
-            !wp_verify_nonce($_POST['changelogify_release_details_nonce'], 'changelogify_save_release_details')) {
+            !wp_verify_nonce(wp_unslash($_POST['changelogify_release_details_nonce']), 'changelogify_save_release_details')) {
             return;
         }
 
         if (!isset($_POST['changelogify_changelog_sections_nonce']) ||
-            !wp_verify_nonce($_POST['changelogify_changelog_sections_nonce'], 'changelogify_save_changelog_sections')) {
+            !wp_verify_nonce(wp_unslash($_POST['changelogify_changelog_sections_nonce']), 'changelogify_save_changelog_sections')) {
             return;
         }
 
@@ -210,24 +212,24 @@ class Changelogify_CPT_Changelog_Release {
 
         // Save version
         if (isset($_POST['changelogify_version'])) {
-            update_post_meta($post_id, '_changelogify_version', sanitize_text_field($_POST['changelogify_version']));
+            update_post_meta($post_id, '_changelogify_version', sanitize_text_field(wp_unslash($_POST['changelogify_version'])));
         }
 
         // Save date range
         if (isset($_POST['changelogify_date_from'])) {
-            update_post_meta($post_id, '_changelogify_date_from', sanitize_text_field($_POST['changelogify_date_from']));
+            update_post_meta($post_id, '_changelogify_date_from', sanitize_text_field(wp_unslash($_POST['changelogify_date_from'])));
         }
 
         if (isset($_POST['changelogify_date_to'])) {
-            update_post_meta($post_id, '_changelogify_date_to', sanitize_text_field($_POST['changelogify_date_to']));
+            update_post_meta($post_id, '_changelogify_date_to', sanitize_text_field(wp_unslash($_POST['changelogify_date_to'])));
         }
 
         // Save changelog sections
         if (isset($_POST['changelogify_sections']) && is_array($_POST['changelogify_sections'])) {
             $sections = [];
             foreach ($_POST['changelogify_sections'] as $section_key => $section_value) {
-                $lines = explode("\n", $section_value);
-                $sections[$section_key] = array_filter(array_map('trim', $lines));
+                $lines = explode("\n", (string) wp_unslash($section_value));
+                $sections[$section_key] = array_filter(array_map('sanitize_text_field', array_map('trim', $lines)));
             }
             update_post_meta($post_id, '_changelogify_changelog_sections', $sections);
         }

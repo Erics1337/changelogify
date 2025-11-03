@@ -31,7 +31,17 @@ get_header();
 
                     <?php if ($date_from && $date_to) : ?>
                         <span class="sources-date-range">
-                            (<?php printf(__('Changes from %s to %s', 'changelogify'), $date_from, $date_to); ?>)
+                            <?php
+                            /* translators: 1: start date, 2: end date */
+                            printf(
+                                '(%s)',
+                                sprintf(
+                                    esc_html__('Changes from %1$s to %2$s', 'changelogify'),
+                                    esc_html($date_from),
+                                    esc_html($date_to)
+                                )
+                            );
+                            ?>
                         </span>
                     <?php endif; ?>
                 </div>
@@ -54,7 +64,7 @@ get_header();
 
             <footer class="entry-footer">
                 <a href="<?php echo esc_url(get_post_type_archive_link('changelog_release')); ?>">
-                    &larr; <?php _e('Back to all releases', 'changelogify'); ?>
+                    &larr; <?php esc_html_e('Back to all releases', 'changelogify'); ?>
                 </a>
             </footer>
         </article>

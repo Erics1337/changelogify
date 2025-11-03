@@ -86,7 +86,7 @@ class Changelogify_Event_Sources {
         $table_name = $wpdb->prefix . 'simple_history';
 
         // Check if table exists
-        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+        if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table_name)) != $table_name) {
             return [];
         }
 
@@ -148,7 +148,7 @@ class Changelogify_Event_Sources {
 
         foreach ($results as $row) {
             $events[] = [
-                'date' => date('Y-m-d H:i:s', $row->created_on),
+                'date' => gmdate('Y-m-d H:i:s', (int) $row->created_on),
                 'type' => 'alert_' . ($row->alert_id ?? 'unknown'),
                 'action' => $this->get_wsal_action_name($row->alert_id ?? 0),
                 'message' => $this->get_wsal_message($row),
@@ -201,7 +201,8 @@ class Changelogify_Event_Sources {
     private function get_wsal_message($row) {
         // This would need to fetch metadata from wsal_metadata table
         // For now, return a basic message
-        return sprintf(__('Activity Log Event #%d', 'changelogify'), $row->id ?? 0);
+        /* translators: 1: WSAL event id */
+        return sprintf(__('Activity Log Event #%1$d', 'changelogify'), $row->id ?? 0);
     }
 
     /**
@@ -230,7 +231,7 @@ class Changelogify_Event_Sources {
         $table_name = $wpdb->prefix . 'changelogify_native_events';
 
         // Check if table exists
-        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+        if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table_name)) != $table_name) {
             $this->create_native_events_table();
         }
 
@@ -319,15 +320,17 @@ class Changelogify_Event_Sources {
         }
 
         if ($new_status === 'publish' && $old_status !== 'publish') {
+            /* translators: 1: post type, 2: post title */
             $message = sprintf(
-                __('Published %s: %s', 'changelogify'),
+                __('Published %1$s: %2$s', 'changelogify'),
                 $post->post_type,
                 $post->post_title
             );
             $this->log_event('post', 'publish', $message, $post->ID, $post->post_type);
         } elseif ($old_status === 'publish' && $new_status === 'trash') {
+            /* translators: 1: post type, 2: post title */
             $message = sprintf(
-                __('Trashed %s: %s', 'changelogify'),
+                __('Trashed %1$s: %2$s', 'changelogify'),
                 $post->post_type,
                 $post->post_title
             );
@@ -340,7 +343,8 @@ class Changelogify_Event_Sources {
      */
     public function log_plugin_activated($plugin, $network_wide) {
         $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/' . $plugin, false, false);
-        $message = sprintf(__('Activated plugin: %s', 'changelogify'), $plugin_data['Name']);
+        /* translators: 1: plugin name */
+        $message = sprintf(__('Activated plugin: %1$s', 'changelogify'), $plugin_data['Name']);
         $this->log_event('plugin', 'activated', $message, 0, 'plugin', ['plugin' => $plugin]);
     }
 
@@ -349,7 +353,8 @@ class Changelogify_Event_Sources {
      */
     public function log_plugin_deactivated($plugin, $network_wide) {
         $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/' . $plugin, false, false);
-        $message = sprintf(__('Deactivated plugin: %s', 'changelogify'), $plugin_data['Name']);
+        /* translators: 1: plugin name */
+        $message = sprintf(__('Deactivated plugin: %1$s', 'changelogify'), $plugin_data['Name']);
         $this->log_event('plugin', 'deactivated', $message, 0, 'plugin', ['plugin' => $plugin]);
     }
 
@@ -357,7 +362,8 @@ class Changelogify_Event_Sources {
      * Log theme switch
      */
     public function log_theme_switched($new_name, $new_theme, $old_theme) {
-        $message = sprintf(__('Switched theme to: %s', 'changelogify'), $new_name);
+        /* translators: 1: theme name */
+        $message = sprintf(__('Switched theme to: %1$s', 'changelogify'), $new_name);
         $this->log_event('theme', 'switched', $message, 0, 'theme');
     }
 
@@ -365,7 +371,8 @@ class Changelogify_Event_Sources {
      * Log WordPress update
      */
     public function log_wp_updated($wp_version) {
-        $message = sprintf(__('Updated WordPress to version %s', 'changelogify'), $wp_version);
+        /* translators: 1: WordPress version */
+        $message = sprintf(__('Updated WordPress to version %1$s', 'changelogify'), $wp_version);
         $this->log_event('wordpress', 'updated', $message);
     }
 }
