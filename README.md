@@ -215,7 +215,7 @@ GPL v2 or later
 
 ## Author
 
-Eric Swanson - [Your Website](https://ericsdevportfolio.com.com)
+Eric Swanson - [Portfolio](https://ericsdevportfolio.com)
 
 ## Support
 
