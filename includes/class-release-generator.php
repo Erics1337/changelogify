@@ -59,13 +59,20 @@ class Changelogify_Release_Generator {
         <div class="wrap">
             <h1><?php esc_html_e('Generate Changelog Release', 'changelogify'); ?></h1>
 
-            <?php // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading GET to show admin notice only
-            if (isset($_GET['generated']) && sanitize_text_field(wp_unslash($_GET['generated'])) === 'success') : ?>
+            <?php
+            $notice_ok = false;
+            if (isset($_GET['generated'], $_GET['_wpnonce'])) {
+                $gen = sanitize_text_field(wp_unslash($_GET['generated']));
+                $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
+                if ($gen === 'success' && wp_verify_nonce($nonce, 'changelogify_generated_notice')) {
+                    $notice_ok = true;
+                }
+            }
+            if ($notice_ok) : ?>
                 <div class="notice notice-success is-dismissible">
                     <p>
                         <?php esc_html_e('Release generated successfully!', 'changelogify'); ?>
-                        <?php // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading GET to build safe link for convenience
-                        if (isset($_GET['post_id'])) : ?>
+                        <?php if (isset($_GET['post_id'])) : ?>
                             <a href="<?php echo esc_url(get_edit_post_link(absint($_GET['post_id']))); ?>">
                                 <?php esc_html_e('View Release', 'changelogify'); ?>
                             </a>
@@ -193,11 +200,14 @@ class Changelogify_Release_Generator {
         $post_id = $this->generate_release($version, $date_from, $date_to);
 
         if ($post_id) {
+            $nonce = wp_create_nonce('changelogify_generated_notice');
             wp_redirect(add_query_arg([
                 'page' => 'sources-generate',
                 'generated' => 'success',
-                'post_id' => $post_id
-            ], admin_url('edit.php?post_type=changelog_release')));
+                'post_id' => $post_id,
+                '_wpnonce' => $nonce
+            ], admin_url('admin.php')));
+            exit;
         } else {
             wp_redirect(add_query_arg([
                 'page' => 'sources-generate',

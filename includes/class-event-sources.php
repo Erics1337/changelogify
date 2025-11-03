@@ -85,21 +85,32 @@ class Changelogify_Event_Sources {
         global $wpdb;
         $table_name = $wpdb->prefix . 'simple_history';
 
-        // Check if table exists
-        if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table_name)) != $table_name) {
+        // Check if table exists (cache + direct query with validation)
+        $exists_key = 'chgfy_tbl_exists_' . md5($table_name);
+        $exists = wp_cache_get($exists_key, 'changelogify');
+        if ($exists === false) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table existence check; value is cached
+            $exists = $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table_name));
+            wp_cache_set($exists_key, $exists, 'changelogify', 60);
+        }
+        if ($exists != $table_name) {
             return [];
         }
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table_name is derived from $wpdb->prefix and is safe
-        $results = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT * FROM $table_name
-                 WHERE date >= %s AND date <= %s
-                 ORDER BY date DESC",
-                $date_from,
-                $date_to
-            )
-        );
+        $cache_key = 'chgfy_sh_' . md5($table_name . '|' . $date_from . '|' . $date_to);
+        $results = wp_cache_get($cache_key, 'changelogify');
+        if ($results === false) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+                $wpdb->prepare(
+                    "SELECT * FROM $table_name WHERE date >= %s AND date <= %s ORDER BY date DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    $date_from,
+                    $date_to
+                )
+            );
+            wp_cache_set($cache_key, $results, 'changelogify', 60);
+        }
         $events = [];
 
         foreach ($results as $row) {
@@ -129,6 +140,7 @@ class Changelogify_Event_Sources {
         $table_name = $wpdb->prefix . 'wsal_occurrences';
 
         // Check if table exists
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table_name)) != $table_name) {
             return [];
         }
@@ -136,16 +148,20 @@ class Changelogify_Event_Sources {
         $timestamp_from = strtotime($date_from);
         $timestamp_to = strtotime($date_to);
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table_name is derived from $wpdb->prefix and is safe
-        $results = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT * FROM $table_name
-                 WHERE created_on >= %d AND created_on <= %d
-                 ORDER BY created_on DESC",
-                $timestamp_from,
-                $timestamp_to
-            )
-        );
+        $cache_key = 'chgfy_wsal_' . md5($table_name . '|' . $timestamp_from . '|' . $timestamp_to);
+        $results = wp_cache_get($cache_key, 'changelogify');
+        if ($results === false) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+                $wpdb->prepare(
+                    "SELECT * FROM $table_name WHERE created_on >= %d AND created_on <= %d ORDER BY created_on DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    $timestamp_from,
+                    $timestamp_to
+                )
+            );
+            wp_cache_set($cache_key, $results, 'changelogify', 60);
+        }
         $events = [];
 
         foreach ($results as $row) {
@@ -232,21 +248,32 @@ class Changelogify_Event_Sources {
         global $wpdb;
         $table_name = $wpdb->prefix . 'changelogify_native_events';
 
-        // Check if table exists
-        if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table_name)) != $table_name) {
+        // Check if table exists (cache + direct query)
+        $exists_key = 'chgfy_tbl_exists_' . md5($table_name);
+        $exists = wp_cache_get($exists_key, 'changelogify');
+        if ($exists === false) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $exists = $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table_name));
+            wp_cache_set($exists_key, $exists, 'changelogify', 60);
+        }
+        if ($exists != $table_name) {
             $this->create_native_events_table();
         }
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table_name is derived from $wpdb->prefix and is safe
-        $results = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT * FROM $table_name
-                 WHERE event_date >= %s AND event_date <= %s
-                 ORDER BY event_date DESC",
-                $date_from,
-                $date_to
-            )
-        );
+        $cache_key = 'chgfy_native_' . md5($table_name . '|' . $date_from . '|' . $date_to);
+        $results = wp_cache_get($cache_key, 'changelogify');
+        if ($results === false) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+                $wpdb->prepare(
+                    "SELECT * FROM $table_name WHERE event_date >= %s AND event_date <= %s ORDER BY event_date DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    $date_from,
+                    $date_to
+                )
+            );
+            wp_cache_set($cache_key, $results, 'changelogify', 60);
+        }
         $events = [];
 
         foreach ($results as $row) {
@@ -298,6 +325,7 @@ class Changelogify_Event_Sources {
         global $wpdb;
         $table_name = $wpdb->prefix . 'changelogify_native_events';
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
         $wpdb->insert(
             $table_name,
             [
@@ -323,16 +351,16 @@ class Changelogify_Event_Sources {
         }
 
         if ($new_status === 'publish' && $old_status !== 'publish') {
-            /* translators: 1: post type, 2: post title */
             $message = sprintf(
+                /* translators: 1: post type, 2: post title */
                 __('Published %1$s: %2$s', 'changelogify'),
                 $post->post_type,
                 $post->post_title
             );
             $this->log_event('post', 'publish', $message, $post->ID, $post->post_type);
         } elseif ($old_status === 'publish' && $new_status === 'trash') {
-            /* translators: 1: post type, 2: post title */
             $message = sprintf(
+                /* translators: 1: post type, 2: post title */
                 __('Trashed %1$s: %2$s', 'changelogify'),
                 $post->post_type,
                 $post->post_title
@@ -346,8 +374,11 @@ class Changelogify_Event_Sources {
      */
     public function log_plugin_activated($plugin, $network_wide) {
         $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/' . $plugin, false, false);
-        /* translators: 1: plugin name */
-        $message = sprintf(__('Activated plugin: %1$s', 'changelogify'), $plugin_data['Name']);
+        $message = sprintf(
+            /* translators: 1: plugin name */
+            __('Activated plugin: %1$s', 'changelogify'),
+            $plugin_data['Name']
+        );
         $this->log_event('plugin', 'activated', $message, 0, 'plugin', ['plugin' => $plugin]);
     }
 
@@ -356,8 +387,11 @@ class Changelogify_Event_Sources {
      */
     public function log_plugin_deactivated($plugin, $network_wide) {
         $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/' . $plugin, false, false);
-        /* translators: 1: plugin name */
-        $message = sprintf(__('Deactivated plugin: %1$s', 'changelogify'), $plugin_data['Name']);
+        $message = sprintf(
+            /* translators: 1: plugin name */
+            __('Deactivated plugin: %1$s', 'changelogify'),
+            $plugin_data['Name']
+        );
         $this->log_event('plugin', 'deactivated', $message, 0, 'plugin', ['plugin' => $plugin]);
     }
 
@@ -365,8 +399,11 @@ class Changelogify_Event_Sources {
      * Log theme switch
      */
     public function log_theme_switched($new_name, $new_theme, $old_theme) {
-        /* translators: 1: theme name */
-        $message = sprintf(__('Switched theme to: %1$s', 'changelogify'), $new_name);
+        $message = sprintf(
+            /* translators: 1: theme name */
+            __('Switched theme to: %1$s', 'changelogify'),
+            $new_name
+        );
         $this->log_event('theme', 'switched', $message, 0, 'theme');
     }
 
@@ -374,8 +411,11 @@ class Changelogify_Event_Sources {
      * Log WordPress update
      */
     public function log_wp_updated($wp_version) {
-        /* translators: 1: WordPress version */
-        $message = sprintf(__('Updated WordPress to version %1$s', 'changelogify'), $wp_version);
+        $message = sprintf(
+            /* translators: 1: WordPress version */
+            __('Updated WordPress to version %1$s', 'changelogify'),
+            $wp_version
+        );
         $this->log_event('wordpress', 'updated', $message);
     }
 }

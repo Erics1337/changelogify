@@ -32,11 +32,14 @@ get_header();
                     <?php if ($date_from && $date_to) : ?>
                         <span class="sources-date-range">
                             <?php
-                            // translators: 1: start date, 2: end date
-                            printf(
-                                esc_html__('(Changes from %1$s to %2$s)', 'changelogify'),
-                                esc_html($date_from),
-                                esc_html($date_to)
+                            /* translators: 1: start date, 2: end date */
+                            $format = __('(Changes from %1$s to %2$s)', 'changelogify');
+                            echo esc_html(
+                                sprintf(
+                                    $format,
+                                    $date_from,
+                                    $date_to
+                                )
                             );
                             ?>
                         </span>

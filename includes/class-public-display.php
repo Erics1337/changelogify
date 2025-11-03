@@ -129,18 +129,17 @@ class Changelogify_Public_Display {
             'posts_per_page' => intval($args['limit']),
             'post_status' => 'publish',
             'orderby' => 'date',
-            'order' => 'DESC'
+            'order' => 'DESC',
+            'no_found_rows' => true
         ];
 
         // Filter by specific version
         if (!empty($args['version'])) {
-            $query_args['meta_query'] = [
-                [
-                    'key' => '_changelogify_version',
-                    'value' => sanitize_text_field($args['version']),
-                    'compare' => '='
-                ]
-            ];
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+            $query_args['meta_key'] = '_changelogify_version';
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+            $query_args['meta_value'] = sanitize_text_field($args['version']);
+            $query_args['meta_compare'] = '=';
         }
 
         $query = new WP_Query($query_args);

@@ -225,11 +225,12 @@ class Changelogify_CPT_Changelog_Release {
         }
 
         // Save changelog sections
-        if (isset($_POST['changelogify_sections']) && is_array($_POST['changelogify_sections'])) {
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Array is unslashed and each value sanitized below
+        $raw_sections = isset($_POST['changelogify_sections']) ? wp_unslash($_POST['changelogify_sections']) : [];
+        if (is_array($raw_sections)) {
             $sections = [];
-            $raw_sections = wp_unslash($_POST['changelogify_sections']);
             foreach ($raw_sections as $section_key => $section_value) {
-                $lines = explode("\n", (string) wp_unslash($section_value));
+                $lines = explode("\n", (string) $section_value);
                 $sections[$section_key] = array_filter(array_map('sanitize_text_field', array_map('trim', $lines)));
             }
             update_post_meta($post_id, '_changelogify_changelog_sections', $sections);
