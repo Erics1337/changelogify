@@ -6,6 +6,33 @@ Automatically generate versioned changelogs from Simple History, WP Activity Log
 
 Changelogify is a comprehensive WordPress plugin that automatically tracks and generates changelog releases from various event sources. It creates beautifully formatted changelogs with customizable sections (Added, Changed, Fixed, Removed, Security) and provides multiple ways to display them on your site.
 
+## Quick Start
+
+1. Install & Activate
+   - Upload `changelogify` to `/wp-content/plugins/` and activate it in WordPress → Plugins.
+
+2. Configure Sources
+   - Go to WordPress Admin → Changelog → Settings.
+   - Choose event sources (Simple History, WP Activity Log, or Native WordPress events).
+
+3. Generate Your First Release
+   - Go to Changelog → Generate Release.
+   - Enter a version (e.g., `1.0.0`) and a date range (e.g., since last release), then click Generate.
+   - Review the generated content and Publish.
+
+4. Display the Changelog
+   - Gutenberg block: add the “Changelog” block to any page/post and configure options.
+   - Shortcode:
+
+     ```wordpress
+     [changelog limit="5" show_version="true" show_date="true"]
+     ```
+
+   - Archive: visit `/changelog/` to see all releases.
+
+5. Optional: Automation
+   - In Changelog → Settings, enable automatic generation and pick a frequency (daily/weekly via WP‑Cron).
+
 ## Features
 
 ### Event Source Adapters
@@ -183,8 +210,8 @@ GPL v2 or later
 
 ## Author
 
-Your Name - [Your Website](https://yourwebsite.com)
+Eric Swanson - [Your Website](https://ericsdevportfolio.com.com)
 
 ## Support
 
-For issues and feature requests, please visit [GitHub Issues](https://github.com/yourusername/changelogify/issues)
+For issues and feature requests, please visit [GitHub Issues](https://github.com/erics1337/changelogify/issues)
