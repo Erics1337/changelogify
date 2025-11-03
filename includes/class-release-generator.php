@@ -59,11 +59,13 @@ class Changelogify_Release_Generator {
         <div class="wrap">
             <h1><?php esc_html_e('Generate Changelog Release', 'changelogify'); ?></h1>
 
-            <?php if (isset($_GET['generated']) && sanitize_text_field(wp_unslash($_GET['generated'])) === 'success') : ?>
+            <?php // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading GET to show admin notice only
+            if (isset($_GET['generated']) && sanitize_text_field(wp_unslash($_GET['generated'])) === 'success') : ?>
                 <div class="notice notice-success is-dismissible">
                     <p>
                         <?php esc_html_e('Release generated successfully!', 'changelogify'); ?>
-                        <?php if (isset($_GET['post_id'])) : ?>
+                        <?php // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading GET to build safe link for convenience
+                        if (isset($_GET['post_id'])) : ?>
                             <a href="<?php echo esc_url(get_edit_post_link(absint($_GET['post_id']))); ?>">
                                 <?php esc_html_e('View Release', 'changelogify'); ?>
                             </a>
@@ -222,8 +224,8 @@ class Changelogify_Release_Generator {
         $sections = $this->categorize_events($events);
 
         // Create post
-        /* translators: 1: release version number */
         $post_id = wp_insert_post([
+            // translators: 1: release version number
             'post_title' => sprintf(__('Release %1$s', 'changelogify'), $version),
             'post_status' => 'draft',
             'post_type' => 'changelog_release',

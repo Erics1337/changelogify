@@ -190,13 +190,13 @@ class Changelogify_CPT_Changelog_Release {
      */
     public function save_meta_boxes($post_id, $post) {
         // Check nonces
-        if (!isset($_POST['changelogify_release_details_nonce']) ||
-            !wp_verify_nonce(wp_unslash($_POST['changelogify_release_details_nonce']), 'changelogify_save_release_details')) {
+        $release_details_nonce = isset($_POST['changelogify_release_details_nonce']) ? sanitize_text_field(wp_unslash($_POST['changelogify_release_details_nonce'])) : '';
+        if (!$release_details_nonce || !wp_verify_nonce($release_details_nonce, 'changelogify_save_release_details')) {
             return;
         }
 
-        if (!isset($_POST['changelogify_changelog_sections_nonce']) ||
-            !wp_verify_nonce(wp_unslash($_POST['changelogify_changelog_sections_nonce']), 'changelogify_save_changelog_sections')) {
+        $sections_nonce = isset($_POST['changelogify_changelog_sections_nonce']) ? sanitize_text_field(wp_unslash($_POST['changelogify_changelog_sections_nonce'])) : '';
+        if (!$sections_nonce || !wp_verify_nonce($sections_nonce, 'changelogify_save_changelog_sections')) {
             return;
         }
 
@@ -227,7 +227,8 @@ class Changelogify_CPT_Changelog_Release {
         // Save changelog sections
         if (isset($_POST['changelogify_sections']) && is_array($_POST['changelogify_sections'])) {
             $sections = [];
-            foreach ($_POST['changelogify_sections'] as $section_key => $section_value) {
+            $raw_sections = wp_unslash($_POST['changelogify_sections']);
+            foreach ($raw_sections as $section_key => $section_value) {
                 $lines = explode("\n", (string) wp_unslash($section_value));
                 $sections[$section_key] = array_filter(array_map('sanitize_text_field', array_map('trim', $lines)));
             }

@@ -186,11 +186,14 @@ class Changelogify_Settings {
         foreach ($sources as $key => $source) {
             $is_checked = in_array($key, $enabled, true);
             $is_disabled = !$source['active'];
-            $status = !$source['active'] ? ' <em>(' . esc_html__('Not installed', 'changelogify') . ')</em>' : '';
+            $has_status = !$source['active'];
 
             echo '<label>';
             echo '<input type="checkbox" name="changelogify_settings[enabled_sources][]" value="' . esc_attr($key) . '" ' . checked($is_checked, true, false) . ' ' . disabled($is_disabled, true, false) . '>';
-            echo ' ' . esc_html($source['label']) . $status;
+            echo ' ' . esc_html($source['label']);
+            if ($has_status) {
+                echo ' <em>(' . esc_html__('Not installed', 'changelogify') . ')</em>'; // markup is intentional
+            }
             echo '</label><br>';
         }
     }

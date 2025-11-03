@@ -90,15 +90,16 @@ class Changelogify_Event_Sources {
             return [];
         }
 
-        $query = $wpdb->prepare(
-            "SELECT * FROM $table_name
-             WHERE date >= %s AND date <= %s
-             ORDER BY date DESC",
-            $date_from,
-            $date_to
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table_name is derived from $wpdb->prefix and is safe
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM $table_name
+                 WHERE date >= %s AND date <= %s
+                 ORDER BY date DESC",
+                $date_from,
+                $date_to
+            )
         );
-
-        $results = $wpdb->get_results($query);
         $events = [];
 
         foreach ($results as $row) {
@@ -128,22 +129,23 @@ class Changelogify_Event_Sources {
         $table_name = $wpdb->prefix . 'wsal_occurrences';
 
         // Check if table exists
-        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+        if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table_name)) != $table_name) {
             return [];
         }
 
         $timestamp_from = strtotime($date_from);
         $timestamp_to = strtotime($date_to);
 
-        $query = $wpdb->prepare(
-            "SELECT * FROM $table_name
-             WHERE created_on >= %d AND created_on <= %d
-             ORDER BY created_on DESC",
-            $timestamp_from,
-            $timestamp_to
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table_name is derived from $wpdb->prefix and is safe
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM $table_name
+                 WHERE created_on >= %d AND created_on <= %d
+                 ORDER BY created_on DESC",
+                $timestamp_from,
+                $timestamp_to
+            )
         );
-
-        $results = $wpdb->get_results($query);
         $events = [];
 
         foreach ($results as $row) {
@@ -235,15 +237,16 @@ class Changelogify_Event_Sources {
             $this->create_native_events_table();
         }
 
-        $query = $wpdb->prepare(
-            "SELECT * FROM $table_name
-             WHERE event_date >= %s AND event_date <= %s
-             ORDER BY event_date DESC",
-            $date_from,
-            $date_to
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table_name is derived from $wpdb->prefix and is safe
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM $table_name
+                 WHERE event_date >= %s AND event_date <= %s
+                 ORDER BY event_date DESC",
+                $date_from,
+                $date_to
+            )
         );
-
-        $results = $wpdb->get_results($query);
         $events = [];
 
         foreach ($results as $row) {

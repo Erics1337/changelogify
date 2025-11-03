@@ -27,7 +27,10 @@ get_header();
                         <?php if ($version) : ?>
                             <h2 class="sources-version">
                                 <a href="<?php the_permalink(); ?>">
-                                    <?php echo esc_html(sprintf(__('Version %s', 'changelogify'), $version)); ?>
+                                    <?php
+                                    // translators: 1: release version
+                                    echo esc_html(sprintf(__('Version %1$s', 'changelogify'), $version));
+                                    ?>
                                 </a>
                             </h2>
                         <?php endif; ?>
@@ -47,7 +50,7 @@ get_header();
                             $method->setAccessible(true);
                             $method->invoke($display, $sections);
                         } else {
-                            the_content();
+                            the_excerpt();
                         }
                         ?>
                     </div>
