@@ -1,0 +1,142 @@
+/**
+ * Sources Plugin - Public Styles
+ */
+
+.sources-changelog {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.sources-release {
+    margin-bottom: 3em;
+    padding-bottom: 2em;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.sources-release:last-child {
+    border-bottom: none;
+}
+
+.sources-release-header {
+    margin-bottom: 1.5em;
+}
+
+.sources-version {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin: 0 0 0.5em 0;
+    color: #1a1a1a;
+}
+
+.sources-date {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.sources-section {
+    margin-bottom: 1.5em;
+}
+
+.sources-section-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 0 0 0.5em 0;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.sources-section-icon {
+    margin-right: 0.5em;
+}
+
+.sources-section-items {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.sources-section-items li {
+    padding: 0.5em 0 0.5em 1.5em;
+    position: relative;
+}
+
+.sources-section-items li:before {
+    content: "•";
+    position: absolute;
+    left: 0.5em;
+    color: #666;
+}
+
+.sources-section-added .sources-section-title {
+    color: #0a8754;
+}
+
+.sources-section-changed .sources-section-title {
+    color: #0969da;
+}
+
+.sources-section-fixed .sources-section-title {
+    color: #cf222e;
+}
+
+.sources-section-removed .sources-section-title {
+    color: #8250df;
+}
+
+.sources-section-security .sources-section-title {
+    color: #d29922;
+}
+
+.sources-release-footer {
+    margin-top: 1em;
+}
+
+.sources-view-release {
+    display: inline-block;
+    padding: 0.5em 1em;
+    background: #0969da;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.sources-view-release:hover {
+    background: #0550ae;
+    color: white;
+}
+
+.sources-no-releases {
+    text-align: center;
+    color: #666;
+    padding: 2em;
+}
+
+/* Archive page styles */
+.post-type-archive-changelog_release .site-main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2em;
+}
+
+/* Single page styles */
+.single-changelog_release .entry-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sources-changelog {
+        padding: 0 1em;
+    }
+
+    .sources-version {
+        font-size: 1.5em;
+    }
+
+    .sources-section-title {
+        font-size: 1.1em;
+    }
+}
