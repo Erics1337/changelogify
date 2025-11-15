@@ -1,7 +1,7 @@
 # Changelogify
 
 Tested up to: 6.8
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html)
 
@@ -208,6 +208,9 @@ changelogify/
 - Shortcode support
 - Archive and single templates
 - Settings page
+
+### 1.0.1
+- Fix: updated readme and security checks
 
 ## License
 

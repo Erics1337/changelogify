@@ -3,7 +3,7 @@
  * Plugin Name: Changelogify
  * Plugin URI: https://www.github.com/erics1337/changelogify
  * Description: Automatic changelog generator from Simple History, WP Activity Log, or native WordPress events. Creates versioned changelog releases with customizable sections.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Eric Swanson
  * Author URI: https://www.ericsdevportfolio.com
  * License: GPL v2 or later
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('CHANGELOGIFY_VERSION', '1.0.0');
+define('CHANGELOGIFY_VERSION', '1.0.1');
 define('CHANGELOGIFY_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CHANGELOGIFY_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('CHANGELOGIFY_PLUGIN_FILE', __FILE__);
