@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Changelogify
- * Plugin URI: https://github.com/yourusername/changelogify
+ * Plugin URI: https://www.github.com/erics1337/changelogify
  * Description: Automatic changelog generator from Simple History, WP Activity Log, or native WordPress events. Creates versioned changelog releases with customizable sections.
  * Version: 1.0.0
  * Author: Eric Swanson
- * Author URI: https://ericsdevportfolio.com
+ * Author URI: https://www.ericsdevportfolio.com
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: changelogify

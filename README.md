@@ -215,8 +215,8 @@ GPL v2 or later
 
 ## Author
 
-Eric Swanson - [Portfolio](https://ericsdevportfolio.com)
+Eric Swanson - [Portfolio](https://www.ericsdevportfolio.com)
 
 ## Support
 
-For issues and feature requests, please visit [GitHub Issues](https://github.com/erics1337/changelogify/issues)
+For issues and feature requests, please visit [GitHub Issues](https://www.github.com/erics1337/changelogify/issues)

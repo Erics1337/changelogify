@@ -3,6 +3,10 @@
  * Archive template for changelog releases
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 get_header();
 ?>
 
