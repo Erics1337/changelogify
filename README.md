@@ -1,7 +1,7 @@
 # Changelogify
 
 Tested up to: 6.8
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html)
 
@@ -196,6 +196,12 @@ changelogify/
 ```
 
 ## Changelog
+
+### 1.0.3
+
+- Fix: Added `/languages/` directory and tightened admin enqueue param sanitization to satisfy plugin header checks.
+- Fix: Replaced `wp_redirect()` calls with `wp_safe_redirect()` and ensured redirects exit immediately.
+- Improvement: Prefixed template-scoped globals and escaped table names in direct SQL queries for better security/compliance.
 
 ### 1.0.2
 
