@@ -83,7 +83,7 @@ class Changelogify_Event_Sources {
         }
 
         global $wpdb;
-        $table_name = $wpdb->prefix . 'simple_history';
+        $table_name = esc_sql($wpdb->prefix . 'simple_history');
 
         // Check if table exists (cache + direct query with validation)
         $exists_key = 'chgfy_tbl_exists_' . md5($table_name);
@@ -104,7 +104,7 @@ class Changelogify_Event_Sources {
             // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
                 $wpdb->prepare(
-                    "SELECT * FROM $table_name WHERE date >= %s AND date <= %s ORDER BY date DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    "SELECT * FROM `{$table_name}` WHERE date >= %s AND date <= %s ORDER BY date DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                     $date_from,
                     $date_to
                 )
@@ -137,7 +137,7 @@ class Changelogify_Event_Sources {
         }
 
         global $wpdb;
-        $table_name = $wpdb->prefix . 'wsal_occurrences';
+        $table_name = esc_sql($wpdb->prefix . 'wsal_occurrences');
 
         // Check if table exists
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -155,7 +155,7 @@ class Changelogify_Event_Sources {
             // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
                 $wpdb->prepare(
-                    "SELECT * FROM $table_name WHERE created_on >= %d AND created_on <= %d ORDER BY created_on DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    "SELECT * FROM `{$table_name}` WHERE created_on >= %d AND created_on <= %d ORDER BY created_on DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                     $timestamp_from,
                     $timestamp_to
                 )
@@ -246,7 +246,7 @@ class Changelogify_Event_Sources {
      */
     private function get_native_events($date_from, $date_to) {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'changelogify_native_events';
+        $table_name = esc_sql($wpdb->prefix . 'changelogify_native_events');
 
         // Check if table exists (cache + direct query)
         $exists_key = 'chgfy_tbl_exists_' . md5($table_name);
@@ -267,7 +267,7 @@ class Changelogify_Event_Sources {
             // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
                 $wpdb->prepare(
-                    "SELECT * FROM $table_name WHERE event_date >= %s AND event_date <= %s ORDER BY event_date DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    "SELECT * FROM `{$table_name}` WHERE event_date >= %s AND event_date <= %s ORDER BY event_date DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                     $date_from,
                     $date_to
                 )

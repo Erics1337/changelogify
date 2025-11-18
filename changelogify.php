@@ -126,7 +126,8 @@ class Changelogify_Plugin {
         if (!is_admin()) {
             return;
         }
-        $page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
+        $page_raw = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $page = $page_raw ? sanitize_key($page_raw) : '';
         if ($page !== 'sources-settings' && $page !== 'sources-generate') {
             return;
         }

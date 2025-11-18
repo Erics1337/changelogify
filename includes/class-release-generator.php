@@ -191,7 +191,7 @@ class Changelogify_Release_Generator {
 
         if ($post_id) {
             $nonce = wp_create_nonce('changelogify_generated_notice');
-            wp_redirect(add_query_arg([
+            wp_safe_redirect(add_query_arg([
                 'page' => 'sources-generate',
                 'generated' => 'success',
                 'post_id' => $post_id,
@@ -199,12 +199,12 @@ class Changelogify_Release_Generator {
             ], admin_url('admin.php')));
             exit;
         } else {
-            wp_redirect(add_query_arg([
+            wp_safe_redirect(add_query_arg([
                 'page' => 'sources-generate',
                 'generated' => 'error'
             ], admin_url('edit.php?post_type=changelog_release')));
+            exit;
         }
-        exit;
     }
 
     /**

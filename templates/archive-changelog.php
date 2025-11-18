@@ -22,18 +22,18 @@ get_header();
 
             while (have_posts()) {
                 the_post();
-                $version = get_post_meta(get_the_ID(), '_changelogify_version', true);
-                $sections = get_post_meta(get_the_ID(), '_changelogify_changelog_sections', true);
+                $changelogify_version = get_post_meta(get_the_ID(), '_changelogify_version', true);
+                $changelogify_sections = get_post_meta(get_the_ID(), '_changelogify_changelog_sections', true);
                 ?>
 
                 <article id="post-<?php the_ID(); ?>" <?php post_class('sources-release'); ?>>
                     <header class="sources-release-header">
-                        <?php if ($version) : ?>
+                        <?php if ($changelogify_version) : ?>
                             <h2 class="sources-version">
                                 <a href="<?php the_permalink(); ?>">
                                     <?php
                                     // translators: 1: release version
-                                    echo esc_html(sprintf(__('Version %1$s', 'changelogify'), $version));
+                                    echo esc_html(sprintf(__('Version %1$s', 'changelogify'), $changelogify_version));
                                     ?>
                                 </a>
                             </h2>
@@ -46,13 +46,13 @@ get_header();
 
                     <div class="sources-release-content">
                         <?php
-                        if (is_array($sections) && !empty($sections)) {
-                            $display = Changelogify_Public_Display::get_instance();
+                        if (is_array($changelogify_sections) && !empty($changelogify_sections)) {
+                            $changelogify_display = Changelogify_Public_Display::get_instance();
                             // Use reflection to call private method for template
-                            $reflection = new ReflectionClass($display);
-                            $method = $reflection->getMethod('render_sections');
-                            $method->setAccessible(true);
-                            $method->invoke($display, $sections);
+                            $changelogify_reflection = new ReflectionClass($changelogify_display);
+                            $changelogify_method = $changelogify_reflection->getMethod('render_sections');
+                            $changelogify_method->setAccessible(true);
+                            $changelogify_method->invoke($changelogify_display, $changelogify_sections);
                         } else {
                             the_excerpt();
                         }
