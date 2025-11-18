@@ -3,7 +3,7 @@
  * Plugin Name: Changelogify
  * Plugin URI: https://www.github.com/erics1337/changelogify
  * Description: Automatic changelog generator from Simple History, WP Activity Log, or native WordPress events. Creates versioned changelog releases with customizable sections.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Eric Swanson
  * Author URI: https://www.ericsdevportfolio.com
  * License: GPL v2 or later
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('CHANGELOGIFY_VERSION', '1.0.1');
+define('CHANGELOGIFY_VERSION', '1.0.2');
 define('CHANGELOGIFY_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CHANGELOGIFY_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('CHANGELOGIFY_PLUGIN_FILE', __FILE__);
@@ -71,6 +71,7 @@ class Changelogify_Plugin {
         add_action('plugins_loaded', [$this, 'init']);
         register_activation_hook(CHANGELOGIFY_PLUGIN_FILE, [$this, 'activate']);
         register_deactivation_hook(CHANGELOGIFY_PLUGIN_FILE, [$this, 'deactivate']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
     }
 
     /**
@@ -119,6 +120,39 @@ class Changelogify_Plugin {
 
         // Flush rewrite rules
         flush_rewrite_rules();
+    }
+
+    public function enqueue_admin_assets($hook_suffix) {
+        if (!is_admin()) {
+            return;
+        }
+        $page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
+        if ($page !== 'sources-settings' && $page !== 'sources-generate') {
+            return;
+        }
+
+        wp_register_script(
+            'changelogify-admin',
+            CHANGELOGIFY_PLUGIN_URL . 'assets/js/admin.js',
+            [],
+            CHANGELOGIFY_VERSION,
+            true
+        );
+
+        $labels = [
+            'added' => __('Added', 'changelogify'),
+            'changed' => __('Changed', 'changelogify'),
+            'fixed' => __('Fixed', 'changelogify'),
+            'removed' => __('Removed', 'changelogify'),
+            'security' => __('Security', 'changelogify'),
+            'remove' => __('Remove', 'changelogify'),
+        ];
+
+        wp_localize_script('changelogify-admin', 'changelogifyAdmin', [
+            'labels' => $labels,
+        ]);
+
+        wp_enqueue_script('changelogify-admin');
     }
 }
 

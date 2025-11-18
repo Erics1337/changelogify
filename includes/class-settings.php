@@ -214,30 +214,7 @@ class Changelogify_Settings {
 
         echo '</div>';
 
-        echo '<button type="button" class="button" onclick="addMappingRow()">' . esc_html__('Add Mapping', 'changelogify') . '</button>';
-
-        ?>
-        <script>
-        function addMappingRow() {
-            var container = document.getElementById('event-mapping-container');
-            var newRow = document.createElement('div');
-            newRow.style.marginBottom = '10px';
-            newRow.innerHTML = `
-                <input type="text" name="changelogify_settings[event_mapping_keys][]" placeholder="Event action" class="regular-text">
-                →
-                <select name="changelogify_settings[event_mapping_values][]">
-                    <option value="added"><?php esc_html_e('Added', 'changelogify'); ?></option>
-                    <option value="changed"><?php esc_html_e('Changed', 'changelogify'); ?></option>
-                    <option value="fixed"><?php esc_html_e('Fixed', 'changelogify'); ?></option>
-                    <option value="removed"><?php esc_html_e('Removed', 'changelogify'); ?></option>
-                    <option value="security"><?php esc_html_e('Security', 'changelogify'); ?></option>
-                </select>
-                <button type="button" class="button" onclick="this.parentElement.remove()">Remove</button>
-            `;
-            container.appendChild(newRow);
-        }
-        </script>
-        <?php
+        echo '<button type="button" class="button" id="add-mapping-row">' . esc_html__('Add Mapping', 'changelogify') . '</button>';
     }
 
     private function render_mapping_row($event, $section) {
@@ -255,7 +232,7 @@ class Changelogify_Settings {
                 <option value="removed" <?php selected($section, 'removed'); ?>><?php esc_html_e('Removed', 'changelogify'); ?></option>
                 <option value="security" <?php selected($section, 'security'); ?>><?php esc_html_e('Security', 'changelogify'); ?></option>
             </select>
-            <button type="button" class="button" onclick="this.parentElement.remove()">Remove</button>
+            <button type="button" class="button mapping-remove" data-action="remove-mapping"><?php esc_html_e('Remove', 'changelogify'); ?></button>
         </div>
         <?php
     }

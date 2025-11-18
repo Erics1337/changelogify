@@ -1,7 +1,7 @@
 # Changelogify
 
 Tested up to: 6.8
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html)
 
@@ -196,6 +196,13 @@ changelogify/
 ```
 
 ## Changelog
+
+### 1.0.2
+
+- Change: Enqueue admin JavaScript via `admin_enqueue_scripts`; added `assets/js/admin.js`.
+- Improvement: Removed inline `<script>` tags in admin pages and replaced with enqueued script for better performance and compatibility.
+- Improvement: Localized labels for mapping UI options via `wp_localize_script`.
+- Fix: Date range toggle on Generate page now handled without inline JS.
 
 ### 1.0.0
 - Initial release

@@ -152,16 +152,6 @@ class Changelogify_Release_Generator {
                 </form>
             </div>
 
-            <script>
-                document.getElementById('date_range_type').addEventListener('change', function() {
-                    var customRange = document.getElementById('custom_date_range');
-                    if (this.value === 'custom') {
-                        customRange.style.display = 'table-row';
-                    } else {
-                        customRange.style.display = 'none';
-                    }
-                });
-            </script>
         </div>
         <?php
     }
